@@ -19,7 +19,7 @@ const userSchema = new Schema(
 			lowercase: true,
 		},
 		password: {
-			type: string,
+			type: String,
 			required: [true, "Password is required"],
 		},
 		coverImage: {
