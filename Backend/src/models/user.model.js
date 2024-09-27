@@ -36,6 +36,10 @@ const userSchema = new Schema(
 			enum: ["active", "inactive"],
 			default: "inactive",
 		},
+
+		refreshToken: {
+			type: String,
+		},
 	},
 	{ timestamps: true }
 );

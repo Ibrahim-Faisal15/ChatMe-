@@ -7,7 +7,7 @@ async function DatabseConnection() {
 			`${process.env.DB_URI}${process.env.DB_NAME}`
 		);
 		console.log(
-			`Connecting to ${connectionInstance.connection.host}`
+			`Connected Successfully at ${connectionInstance.connection.host}`
 		);
 	} catch (error) {
 		console.error(
