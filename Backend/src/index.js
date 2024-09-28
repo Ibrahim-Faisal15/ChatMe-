@@ -1,4 +1,3 @@
-import { connect } from "mongoose";
 import app from "./app.js";
 import DatabseConnection from "./db/index.db.js";
 import "dotenv/config";

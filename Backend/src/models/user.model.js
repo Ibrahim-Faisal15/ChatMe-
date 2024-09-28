@@ -1,11 +1,13 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
+import bcrypt from "bcrypt";
 
 const userSchema = new Schema(
 	{
 		username: {
 			type: String,
 			required: true,
+
 			unique: true,
 			lowercase: true,
 			trim: true,
@@ -20,7 +22,7 @@ const userSchema = new Schema(
 		},
 		password: {
 			type: String,
-			required: [true, "Password is required"],
+			required: true,
 		},
 		coverImage: {
 			type: String,
@@ -43,5 +45,12 @@ const userSchema = new Schema(
 	},
 	{ timestamps: true }
 );
+
+userSchema.pre("save", async function (next) {
+	// ALWAYS REMEMBER KIDDOS, USE FUNCTION KEYWORD NOT ARROW FUCNTION..
+	if (!this.isModified("password")) return next();
+	this.password = await bcrypt.hash(this.password, 10);
+	next();
+});
 
 export const UserModel = mongoose.model("User", userSchema);

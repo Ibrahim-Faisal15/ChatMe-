@@ -6,24 +6,24 @@ import "dotenv/config";
 const app = express();
 
 // MIDDLEWARES
+
 app.use(
 	cors({
-		origin: process.env.WHITELIST_URL,
+		origin: process.env.CORS_ORIGIN,
 		credentials: true,
 	})
 );
 
-app.use(cookieParser());
-
-app.use(json());
-
+app.use(express.json({ limit: "16kb" }));
+app.use(
+	express.urlencoded({ extended: true, limit: "16kb" })
+);
 app.use(express.static("public"));
-
-app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 import userRouters from "./routes/user.route.js";
 
 //routes
-app.use("/api/v1/users", userRouters);
+app.use("/api/v1/user", userRouters);
 
 export default app;
