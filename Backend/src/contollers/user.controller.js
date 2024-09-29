@@ -1,8 +1,22 @@
-// import asyncHandler from ".././utils/asyncHandler.utils.js";
 import ApiError from ".././utils/apiError.utils.js";
 import ApiResponse from ".././utils/apiResponse.utils.js";
 import { UserModel } from "../models/user.model.js";
 import asyncHandler from ".././utils/asyncHandler.utils.js";
+
+const generateAccessToken_and_RefreshToken = async (user_id) => {
+	try {
+		const user = await UserModel.findById(user_id);
+		if (!user) throw new ApiError(404, "User not found");
+
+		const accessToken = user.generateAccessToken();
+		const refreshToken = user.generateRefreshToken();
+		user.refreshToken = refreshToken;
+		await user.save({ validateBeforeSave: false });
+		return { accessToken, refreshToken };
+	} catch (error) {
+		throw new ApiError(500, "Error generating access token and refresh token");
+	}
+};
 
 const registerUser = asyncHandler(async (req, res) => {
 	// Alogristhm was registering user
@@ -17,8 +31,7 @@ const registerUser = asyncHandler(async (req, res) => {
 	// Send back a success response with user data
 	//redirect to the login page
 
-	const { username, email, password } =
-		req.body || req.query;
+	const { username, email, password } = req.body || req.query;
 
 	console.log(req.body);
 
@@ -45,8 +58,7 @@ const registerUser = asyncHandler(async (req, res) => {
 		email: email,
 		password: password,
 		coverImage: "",
-		profileImage:
-			"https://www.gravatar.com/avatar/md5?d=identicon&s=200&r=pg",
+		profileImage: "https://www.gravatar.com/avatar/md5?d=identicon&s=200&r=pg",
 		status: "inactive",
 		refreshToken: "",
 	});
@@ -55,9 +67,7 @@ const registerUser = asyncHandler(async (req, res) => {
 		throw new ApiError(500, "Error creating user");
 	}
 
-	const isUserCreated = await UserModel.findOne(
-		User._id
-	).select("-password -refreshToken");
+	const isUserCreated = await UserModel.findOne(User._id).select("-password -refreshToken");
 
 	if (!isUserCreated) {
 		throw new ApiError(500, "Error fetching user");
@@ -65,15 +75,51 @@ const registerUser = asyncHandler(async (req, res) => {
 
 	console.log(isUserCreated, 12);
 
-	return res
-		.status(200)
-		.json(
-			new ApiResponse(
-				200,
-				isUserCreated,
-				"User created successfully"
-			)
-		);
+	return res.status(200).json(new ApiResponse(200, isUserCreated, "User created successfully"));
 });
 
-export { registerUser };
+const loginUser = asyncHandler(async (req, res) => {
+	/*
+		User Login Algorithm
+		take username and password from user.
+		check if user exists in the database.
+		if not exists throw and error
+		if then compare the username with stored username 
+		comapre password with stored hash password.
+		if password is correct generate a refresh token access token.
+		send accestoken as a cookie
+	*/
+
+	const { username, password } = req.body;
+
+	console.log(req.body);
+
+	if (!(username && password)) {
+		throw new ApiError(400, "All fields are required");
+	}
+
+	const user = await UserModel.findOne({
+		username: username,
+	});
+
+	if (!user) {
+		throw new ApiError(401, "Invalid credentials");
+	}
+
+	const isPasswordValid = await user.isPasswordCorrect(password);
+
+	if (!isPasswordValid) {
+		throw new ApiError(401, "Invalid password");
+	}
+
+	const { accessToken, refreshToken } = await generateAccessToken_and_RefreshToken(user._id);
+
+	const LogInUser = await UserModel.findOne(user._id).select("-password -refreshToken");
+
+	return res
+		.status(200)
+		.cookie("accessToken", accessToken, { httpOnly: true, secure: true })
+		.json(new ApiResponse(200, LogInUser, "Logged in successfully"));
+});
+
+export { registerUser, loginUser };
