@@ -122,4 +122,14 @@ const loginUser = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, LogInUser, "Logged in successfully"));
 });
 
-export { registerUser, loginUser };
+const isLoggedIn = asyncHandler(async (req, res) => {
+	const token = req.cookies.accessToken;
+
+	if (!token) {
+		return res.status(200).json(new ApiResponse(401, null, "Not logged in"));
+	} else {
+		return res.status(200).json(new ApiResponse(200, true, "Logged in"));
+	}
+});
+
+export { registerUser, loginUser, isLoggedIn };
