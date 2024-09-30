@@ -1,30 +1,19 @@
-import "./index.css"
-import RegisterUser from "./components/RegisterUser.jsx"
-import { useEffect, useState } from "react"
-import LoginUser from "./components/LoginUser.jsx"
-import axios from 'axios';
+import "./index.css";
+import RegisterUser from "./components/RegisterUser.jsx";
+import { Navigate } from "react-router-dom";
 
-
-
+import { useLoaderData } from "react-router-dom";
 function App() {
-  const [IsLoggedIn, changeLoggedIn] = useState(false)
+  const UserState = useLoaderData();
+  let content;
 
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/v1/user/isLoggedIn")
-      .then((response) => {
-        if (response.data === "Not logged in") {
-          changeLoggedIn(false)
-        } else {
-          changeLoggedIn(true)
-        }
-      })
+  if (UserState === true) {
+    content = <RegisterUser />;
+  } else {
+    content = <Navigate to="/Login" replace />;
+  }
 
-  }, [])
-
-
-  return <>
-    {IsLoggedIn ? <RegisterUser /> : <LoginUser />}
-  </>
+  return <>{content}</>;
 }
 
 export default App;
