@@ -7,10 +7,10 @@ function App() {
   const UserState = useLoaderData();
   let content;
 
-  if (UserState === true) {
-    content = <RegisterUser />;
+  if (UserState === "register") {
+    content = <Navigate to="/Register" />;
   } else {
-    content = <Navigate to="/Login" replace />;
+    content = <Navigate to="/Login" />;
   }
 
   return <>{content}</>;

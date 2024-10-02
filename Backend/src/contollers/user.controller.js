@@ -124,6 +124,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const isLoggedIn = asyncHandler(async (req, res) => {
 	const token = req.cookies.accessToken;
+	console.log(token);
 
 	if (!token) {
 		return res.status(200).json(new ApiResponse(200, null, "Not logged in"));

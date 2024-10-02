@@ -10,10 +10,11 @@ async function IsUserLoggedIn() {
   try {
     const response = await axios.get("http://localhost:8000/api/v1/user/isLoggedIn");
     if (response.status === 200) {
-      if (response.data === "Not logged in") {
-        return false;
+      // console.log(response.typeof, response.data === "Not logged in")
+      if (response.data.message === "Not logged in") {
+        return "register";
       } else {
-        return true;
+        return "login";
       }
     }
     throw new Error("Request failed with status " + response.status);
@@ -23,6 +24,8 @@ async function IsUserLoggedIn() {
   }
 }
 
+<Headers></Headers>
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,12 +33,12 @@ const router = createBrowserRouter([
     loader: IsUserLoggedIn,
   },
   {
-    path: "/Login",
-    element: <LoginUser></LoginUser>,
-  },
-  {
     path: "/Register",
     element: <RegisterUser></RegisterUser>,
+  },
+  {
+    path: "/Login",
+    element: <LoginUser></LoginUser>,
   },
 ]);
 

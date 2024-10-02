@@ -3,7 +3,7 @@ import { isLoggedIn, loginUser, registerUser } from "../contollers/user.controll
 
 const router = Router();
 
-router.route("/register").post(registerUser);
+router.route("/registerUser").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/isLoggedIn").get(isLoggedIn);
 
