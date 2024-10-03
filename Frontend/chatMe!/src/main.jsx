@@ -24,6 +24,10 @@ async function IsUserLoggedIn() {
   }
 }
 
+
+
+
+
 <Headers></Headers>
 
 const router = createBrowserRouter([
@@ -35,6 +39,7 @@ const router = createBrowserRouter([
   {
     path: "/Register",
     element: <RegisterUser></RegisterUser>,
+
   },
   {
     path: "/Login",

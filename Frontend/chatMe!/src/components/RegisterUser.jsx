@@ -1,20 +1,23 @@
 import { Card, Input, Checkbox, Button, Typography } from "@material-tailwind/react";
 import axios from "axios";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 
 
 function RegisterUser() {
 
 
-
   const navigate = useNavigate()
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
   });
+
+
 
   // console.log(formData)
 
@@ -53,10 +56,10 @@ function RegisterUser() {
   };
 
   return (
-    <>
-      {/* <div className="header">
-      <img src="public\image.svg" alt="" />
-    </div> */}
+    <div className="flex justify-center items-center flex-col h-[90vh]">
+      <div className="header">
+        <img src="public\logoIMG.png" alt="Logo" className="h-56" />
+      </div>
       <Card color="transparent" shadow={false} className="justify-center">
         <Typography variant="h4" color="blue-gray">
           Sign Up
@@ -116,13 +119,13 @@ function RegisterUser() {
           </Button>
           <Typography color="gray" className="mt-4 text-center font-normal">
             Already have an account?{" "}
-            <a href="#" className="font-medium text-gray-900">
+            <Link to="/Login" className="font-medium text-gray-900">
               Login to your account
-            </a>
+            </Link>
           </Typography>
         </form>
       </Card>
-    </>
+    </div>
 
   );
 }

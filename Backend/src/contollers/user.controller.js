@@ -10,7 +10,9 @@ const generateAccessToken_and_RefreshToken = async (user_id) => {
 
 		const accessToken = user.generateAccessToken();
 		const refreshToken = user.generateRefreshToken();
+		// console.log(`Access token: ${accessToken}, refresh token: ${refreshToken}`);
 		user.refreshToken = refreshToken;
+
 		await user.save({ validateBeforeSave: false });
 		return { accessToken, refreshToken };
 	} catch (error) {
@@ -123,13 +125,13 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const isLoggedIn = asyncHandler(async (req, res) => {
-	const token = req.cookies.accessToken;
-	console.log(token);
+	const token = req.cookies;
+	console.log(12, token);
 
 	if (!token) {
 		return res.status(200).json(new ApiResponse(200, null, "Not logged in"));
 	} else {
-		return res.status(200).json(new ApiResponse(200, true, "Logged in"));
+		return res.status(200).json(new ApiResponse(200, null, "Logged in"));
 	}
 });
 
