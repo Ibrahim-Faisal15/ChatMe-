@@ -30,6 +30,14 @@ const userSchema = new Schema(
 			type: String,
 			default: "Backend\\public\\default_Images", //I will change it back in the future
 		},
+
+		conversations: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: "ConversationModel",
+			},
+		],
+
 		profileImage: {
 			type: String,
 			default: "Backend\\public\\default_Images", //I will change it back in the future

@@ -25,7 +25,7 @@ const conversationSchema = new Schema(
 		},
 		lastMessage: {
 			type: Schema.Types.ObjectId,
-			ref: "Message",
+			ref: "MessageModel",
 		},
 		isGlobal: {
 			type: Boolean,
@@ -41,7 +41,4 @@ const conversationSchema = new Schema(
 	}
 );
 
-export const ConversationModel = mongoose.model(
-	"ConversationModel",
-	conversationSchema
-);
+export const ConversationModel = mongoose.model("ConversationModel", conversationSchema);

@@ -126,7 +126,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const isLoggedIn = asyncHandler(async (req, res) => {
 	const token = req.cookies;
-	console.log(12, token);
 
 	if (!token) {
 		return res.status(200).json(new ApiResponse(200, null, "Not logged in"));
@@ -135,4 +134,6 @@ const isLoggedIn = asyncHandler(async (req, res) => {
 	}
 });
 
-export { registerUser, loginUser, isLoggedIn };
+const getAllChatLogs = asyncHandler(async (req, res) => {});
+
+export { registerUser, loginUser, isLoggedIn, getAllChatLogs };

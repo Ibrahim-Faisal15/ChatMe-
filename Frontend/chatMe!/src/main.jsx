@@ -5,6 +5,7 @@ import axios from "axios";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginUser from "./components/LoginUser.jsx";
 import RegisterUser from "./components/RegisterUser.jsx";
+import ChatLogs from "./components/ChatLogs.jsx";
 
 async function IsUserLoggedIn() {
   try {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
   {
     path: "/Login",
     element: <LoginUser></LoginUser>,
+  },
+  {
+    path: "/chat-logs",
+    element: <ChatLogs></ChatLogs>
   },
 ]);
 

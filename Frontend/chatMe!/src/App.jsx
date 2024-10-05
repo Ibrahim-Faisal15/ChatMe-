@@ -10,7 +10,7 @@ function App() {
   if (UserState === "register") {
     content = <Navigate to="/Register" />;
   } else {
-    content = <Navigate to="/Login" />;
+    content = <Navigate to="/chat-logs" />;
   }
 
   return <>{content}</>;
