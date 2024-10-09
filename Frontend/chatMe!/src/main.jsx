@@ -47,7 +47,7 @@ const router = createBrowserRouter([
     element: <LoginUser></LoginUser>,
   },
   {
-    path: "/chat-logs",
+    path: "/chats",
     element: <ChatLogs></ChatLogs>
   },
 ]);

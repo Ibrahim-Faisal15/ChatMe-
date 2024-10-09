@@ -27,7 +27,7 @@ export default function LoginUser() {
       .then((response) => {
         if (response.status === 200) {
           console.log(response.data.message);
-          navigate("/chat-logs");
+          navigate("/chats");
         } else {
           console.log(response.data.message);
         }

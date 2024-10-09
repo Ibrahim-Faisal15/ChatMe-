@@ -24,3 +24,5 @@ const verifyjwt = asyncHandler(async (req, _, next) => {
 		throw new ApiError(401, error.message || "Unexpected error");
 	}
 });
+
+export default verifyjwt;
