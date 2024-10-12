@@ -13,7 +13,7 @@ export default function LoginUser() {
     password: "",
   });
 
-  // console.log(formData)
+
 
   const changeFunction = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,7 +23,7 @@ export default function LoginUser() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:8000/api/v1/user/login", formData)
+      .post("/api/v1/user/login", formData)
       .then((response) => {
         if (response.status === 200) {
           console.log(response.data.message);

@@ -4,12 +4,12 @@ import App from "./App.jsx";
 import axios from "axios";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginUser from "./components/LoginUser.jsx";
-import RegisterUser from "./components/RegisterUser.jsx";
 import ChatLogs from "./components/ChatLogs.jsx";
+import RegisterUser from "./components/registerUser.jsx";
 
 async function IsUserLoggedIn() {
   try {
-    const response = await axios.get("http://localhost:8000/api/v1/user/isLoggedIn");
+    const response = await axios.get("api/v1/user/isLoggedIn", { withCredentials: true });
     if (response.status === 200) {
       // console.log(response.typeof, response.data === "Not logged in")
       if (response.data.message === "Not logged in") {
@@ -17,19 +17,14 @@ async function IsUserLoggedIn() {
       } else {
         return "login";
       }
+    } else {
+      throw new Error("Request failed with status " + response.status);
     }
-    throw new Error("Request failed with status " + response.status);
   } catch (error) {
     console.error("Error:", error);
     return false;
   }
 }
-
-
-
-
-
-<Headers></Headers>
 
 const router = createBrowserRouter([
   {
@@ -40,7 +35,6 @@ const router = createBrowserRouter([
   {
     path: "/Register",
     element: <RegisterUser></RegisterUser>,
-
   },
   {
     path: "/Login",
@@ -48,7 +42,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/chats",
-    element: <ChatLogs></ChatLogs>
+    element: <ChatLogs></ChatLogs>,
   },
 ]);
 

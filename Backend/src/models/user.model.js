@@ -83,7 +83,7 @@ userSchema.methods.generateAccessToken = function () {
 		{
 			_id: this._id,
 		},
-		`${process.env.ACCESSS_TOKEN_SECTET}`,
+		`${process.env.ACCESSTOKEN_TOKEN_SECRET}`,
 		{ expiresIn: `${process.env.ACCESS_TOKEN_EXP}` }
 	);
 };

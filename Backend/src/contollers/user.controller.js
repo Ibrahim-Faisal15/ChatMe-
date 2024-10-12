@@ -10,7 +10,6 @@ const generateAccessToken_and_RefreshToken = async (user_id) => {
 
 		const accessToken = user.generateAccessToken();
 		const refreshToken = user.generateRefreshToken();
-		// console.log(`Access token: ${accessToken}, refresh token: ${refreshToken}`);
 		user.refreshToken = refreshToken;
 
 		await user.save({ validateBeforeSave: false });
@@ -35,8 +34,6 @@ const registerUser = asyncHandler(async (req, res) => {
 
 	const { username, email, password } = req.body || req.query;
 
-	console.log(req.body);
-
 	if (
 		[username, email, password].some((data) => {
 			data?.trim() == "";
@@ -52,8 +49,6 @@ const registerUser = asyncHandler(async (req, res) => {
 	if (userExists) {
 		throw new ApiError(400, "User already exists");
 	}
-
-	console.log(21);
 
 	const User = await UserModel.create({
 		username: username,
@@ -75,8 +70,6 @@ const registerUser = asyncHandler(async (req, res) => {
 		throw new ApiError(500, "Error fetching user");
 	}
 
-	console.log(isUserCreated, 12);
-
 	return res.status(200).json(new ApiResponse(200, isUserCreated, "User created successfully"));
 });
 
@@ -93,8 +86,6 @@ const loginUser = asyncHandler(async (req, res) => {
 	*/
 
 	const { username, password } = req.body;
-
-	console.log(req.body);
 
 	if (!(username && password)) {
 		throw new ApiError(400, "All fields are required");
@@ -120,20 +111,24 @@ const loginUser = asyncHandler(async (req, res) => {
 
 	return res
 		.status(200)
-		.cookie("accessToken", accessToken, { httpOnly: true, secure: true })
+		.cookie("access_token", accessToken)
 		.json(new ApiResponse(200, LogInUser, "Logged in successfully"));
 });
 
 const isLoggedIn = asyncHandler(async (req, res) => {
-	const token = req.cookies;
+	const token = req?.cookies;
 
-	if (!token) {
+	if (Object.keys(token).length === 0) {
 		return res.status(200).json(new ApiResponse(200, null, "Not logged in"));
 	} else {
 		return res.status(200).json(new ApiResponse(200, null, "Logged in"));
 	}
 });
 
-const getAllChatLogs = asyncHandler(async (req, res) => {});
+const getAllChatLogs = asyncHandler(async (req, res) => {
+	res.json(new ApiResponse(200, req.cookies, "Verified"));
+});
 
 export { registerUser, loginUser, isLoggedIn, getAllChatLogs };
+
+//figurte out why chat-logs request aiant wokring

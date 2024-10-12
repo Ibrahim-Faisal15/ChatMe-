@@ -6,11 +6,15 @@ import {
 	registerUser,
 } from "../contollers/user.controller.js";
 
+import authMiddleware from "../middlewares/auth.middleware.js";
+
 const router = Router();
 
 router.route("/registerUser").post(registerUser);
 router.route("/login").post(loginUser);
 router.route("/isLoggedIn").get(isLoggedIn);
-router.route("/get-all-chatLogs").get(getAllChatLogs);
+
+//Safe routes
+router.route("/get-all-chatLogs").get(authMiddleware, getAllChatLogs);
 
 export default router;

@@ -1,5 +1,4 @@
 import "./index.css";
-import RegisterUser from "./components/RegisterUser.jsx";
 import { Navigate } from "react-router-dom";
 
 import { useLoaderData } from "react-router-dom";
@@ -10,7 +9,7 @@ function App() {
   if (UserState === "register") {
     content = <Navigate to="/Register" />;
   } else {
-    content = <Navigate to="/chat-logs" />;
+    content = <Navigate to="/chats" />;
   }
 
   return <>{content}</>;

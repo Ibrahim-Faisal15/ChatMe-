@@ -1,11 +1,13 @@
 import { UserModel } from "../models/user.model.js";
-import ApiError from "../utils/apiError.utils";
+import ApiError from "../utils/apiError.utils.js";
 import asyncHandler from "../utils/asyncHandler.utils.js";
 import jwt from "jsonwebtoken";
 
 const verifyjwt = asyncHandler(async (req, _, next) => {
 	try {
-		const token = req.cookies.accessToken;
+		const token =
+			req.cookies?.access_token || req.header("Authorization")?.replace("Bearer ", "");
+
 		if (!token) {
 			throw new ApiError(400, "Unauthorized request");
 		}

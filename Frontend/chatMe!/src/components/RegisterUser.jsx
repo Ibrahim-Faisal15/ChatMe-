@@ -4,12 +4,8 @@ import { useState } from "react";
 import { Navigate, useLoaderData, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
-
-
 function RegisterUser() {
-
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -19,8 +15,6 @@ function RegisterUser() {
 
 
 
-  // console.log(formData)
-
   const changeFunction = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -29,30 +23,24 @@ function RegisterUser() {
     e.preventDefault();
 
     axios
-      .post("http://localhost:8000/api/v1/user/registerUser", formData)
+      .post("api/v1/user/registerUser", formData)
       .then((response) => {
         if (response.status === 200) {
           console.log(response.data.message);
-          navigate("/Login")
-
+          navigate("/Login");
         } else {
           console.log(response.data.message);
         }
       })
-      .catch(error => {
+      .catch((error) => {
         if (error.response) {
-
           console.error("Server error:", error.response.data.message);
         } else if (error.request) {
-
           console.error("Network error or no response received:", error.request);
         } else {
-
           console.error("Error:", error.message);
         }
       });
-
-
   };
 
   return (
@@ -126,7 +114,6 @@ function RegisterUser() {
         </form>
       </Card>
     </div>
-
   );
 }
 
