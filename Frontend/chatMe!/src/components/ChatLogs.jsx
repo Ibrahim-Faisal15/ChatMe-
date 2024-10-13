@@ -1,18 +1,21 @@
 import { Avatar } from "@material-tailwind/react";
 import { Button } from "@material-tailwind/react";
 import axios from "axios";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { redirect, useNavigate } from "react-router-dom";
 
 function ChatLogs() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("")
 
   useEffect(() => {
     axios
       .get("/api/v1/user/get-all-chatLogs", { withCredentials: true })
       .then((response) => {
         if (response.status === 200) {
-          console.log("Chat logs retrieved:", response.data)
+          // console.log("Chat logs retrieved:", response.data);
+          setUsername(response.data.data.username)
+
         }
       })
       .catch((err) => {
@@ -26,6 +29,7 @@ function ChatLogs() {
       document.querySelector(".chatLogs").classList.toggle("hidden", true);
       document.querySelector(".chat").classList.toggle("hidden", false);
       document.querySelector(".chat").classList.add("w-screen");
+      document.querySelector(".chat").classList.add("flex items-center justify-center text-2xl font-medium");
     }
   };
 
@@ -35,6 +39,7 @@ function ChatLogs() {
       document.querySelector(".chatLogs").classList.toggle("hidden", false);
       document.querySelector(".chat").classList.toggle("hidden", true);
       document.querySelector(".chat").classList.add("w-screen");
+      document.querySelector(".chat").classList.add("flex items-center justify-center text-2xl font-medium");
     }
   };
 
@@ -48,11 +53,15 @@ function ChatLogs() {
           }}
         >
           <div className="header flex justify-between items-center h-[10vh]  border-b-2 border-black">
-            <div className="profile-photo px-4">
+            <div className="profile-photo px-4 flex items-center">
               <Avatar
                 src="https://docs.material-tailwind.com/img/face-2.jpg"
                 alt="avatar"
               />
+              <div className="username text-[1.2em] font-bold pl-2">
+                {username}
+              </div>
+
             </div>
             <div className="Chat-config-btns flex justify-evenly w-32 ">
               <Button variant="filled" className="w-2 flex justify-center  bg-black">
@@ -63,22 +72,46 @@ function ChatLogs() {
               </Button>
             </div>
           </div>
-          <div className="All-Chat-Logs h-[80vh]">Chats</div>
+
+          <div className="All-Chat-Logs h-[80vh]" onClick={() => {
+            func()
+          }}>
+            <div className="Chat-instance  !important hover:bg-gray-400 active:bg-gray-400 focus-visible:bg-gray-400 border-b-2 border-black flex h-[8vh] items-center cursor-pointer">
+
+              <div className="image pl-3"> <Avatar
+                src="https://docs.material-tailwind.com/img/face-2.jpg"
+                alt="avatar"
+
+              /></div>
+              <div className="information pl-5">
+                <div className="username text-lg font-bold">Sheldon</div>
+                <div className="last-message">We'll meet at 5...</div>
+              </div>
+            </div>
+          </div>
           <div className="footer h-[10vh] border-t-2 border-black flex items-center px-4 ">
-            <Button variant="filled" className="flex justify-center bg-black">
+            <Button variant="filled" className="flex justify-center bg-black" onClick={() => {
+              axios.get("api/v1/user/logout")
+                .then((response) => {
+                  navigate("/login")
+                }).catch((error) => {
+                  console.error("Error occurred:", error);
+
+                })
+            }}>
               Logout!
             </Button>
           </div>
         </div>
         <div
-          className="chat border-black border-2 bg-red-900 hidden     md:block md:w-[65vw]"
+          className="chat border-black border-2 bg-gray-600 hidden md:flex md:items-center md:justify-center md:text-2xl md:font-medium md:w-[65vw]"
           onClick={() => {
             func2();
           }}
         >
-          CHATS
+          Select a chat and have fun
         </div>
-      </div>
+      </div >
     </>
   );
 }

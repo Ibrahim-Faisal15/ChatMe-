@@ -126,9 +126,25 @@ const isLoggedIn = asyncHandler(async (req, res) => {
 });
 
 const getAllChatLogs = asyncHandler(async (req, res) => {
-	res.json(new ApiResponse(200, req.cookies, "Verified"));
+	res.json(new ApiResponse(200, req.user, "Verified"));
 });
 
-export { registerUser, loginUser, isLoggedIn, getAllChatLogs };
+const logoutUser = asyncHandler(async (req, res) => {
+	await UserModel.findByIdAndUpdate(
+		req.user?._id,
+		{
+			$unset: {
+				refreshToken: 1,
+			},
+		},
+		{
+			new: true,
+		}
+	);
+	return res
+		.status(200)
+		.clearCookie("access_token")
+		.json(new ApiResponse(200, {}, "User logged out successfully"));
+});
 
-//figurte out why chat-logs request aiant wokring
+export { registerUser, loginUser, isLoggedIn, getAllChatLogs, logoutUser };

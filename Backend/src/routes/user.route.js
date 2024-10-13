@@ -3,6 +3,7 @@ import {
 	getAllChatLogs,
 	isLoggedIn,
 	loginUser,
+	logoutUser,
 	registerUser,
 } from "../contollers/user.controller.js";
 
@@ -16,5 +17,6 @@ router.route("/isLoggedIn").get(isLoggedIn);
 
 //Safe routes
 router.route("/get-all-chatLogs").get(authMiddleware, getAllChatLogs);
+router.route("/logout").get(authMiddleware, logoutUser);
 
 export default router;
