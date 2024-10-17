@@ -1,26 +1,31 @@
 import app from "./app.js";
 import DatabseConnection from "./db/index.db.js";
 import "dotenv/config";
+import http from "http";
+import { Server } from "socket.io";
+
+const server = http.createServer(app);
+const io = new Server(server, {
+	cors: {
+		origin: "*",
+	},
+});
 
 DatabseConnection()
 	.then(() => {
-		app.on("error", (error) => {
-			console.log(
-				"Database Connection Error: ",
-				error
-			);
-		});
+		io.on("connection", (socket) => {
+			console.log("New client connected");
+			socket.emit("welcome", "Talking from server.........");
 
-		app.listen(process.env.PORT || 3000, () => {
-			console.log(
-				`Server is running on port ${process.env.PORT}`
-			);
+			socket.on("msg", (data) => {
+				console.log("Data from the client", data);
+			});
+		});
+		server.listen(process.env.PORT || 3000, () => {
+			console.log(`Server is running on port ${process.env.PORT || 3000}`);
 		});
 	})
 	.catch((error) => {
-		console.error(
-			"Error connecting to database",
-			error
-		);
+		console.error("Error connecting to database", error);
 		process.exit(1);
 	});

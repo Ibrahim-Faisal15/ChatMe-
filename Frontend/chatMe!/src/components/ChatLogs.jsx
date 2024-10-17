@@ -3,10 +3,29 @@ import { Button } from "@material-tailwind/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { redirect, useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
+const socket = io("http://localhost:3000", {
+  protocols: ["websocket"],
+});
+
 
 function ChatLogs() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("")
+  const [username, setUsername] = useState("");
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      socket.on("welcome", (data) => {
+        console.log("msg from server:", data);
+      })
+      socket.emit("msg", "thanks for connecting");
+    })
+
+    return () => {
+      socket.off("connect")
+    }
+
+  }, []);
 
   useEffect(() => {
     axios
@@ -14,8 +33,7 @@ function ChatLogs() {
       .then((response) => {
         if (response.status === 200) {
           // console.log("Chat logs retrieved:", response.data);
-          setUsername(response.data.data.username)
-
+          setUsername(response.data.data.username);
         }
       })
       .catch((err) => {
@@ -29,7 +47,9 @@ function ChatLogs() {
       document.querySelector(".chatLogs").classList.toggle("hidden", true);
       document.querySelector(".chat").classList.toggle("hidden", false);
       document.querySelector(".chat").classList.add("w-screen");
-      document.querySelector(".chat").classList.add("flex items-center justify-center text-2xl font-medium");
+      document
+        .querySelector(".chat")
+        .classList.add("flex items-center justify-center text-2xl font-medium");
     }
   };
 
@@ -39,29 +59,23 @@ function ChatLogs() {
       document.querySelector(".chatLogs").classList.toggle("hidden", false);
       document.querySelector(".chat").classList.toggle("hidden", true);
       document.querySelector(".chat").classList.add("w-screen");
-      document.querySelector(".chat").classList.add("flex items-center justify-center text-2xl font-medium");
+      document
+        .querySelector(".chat")
+        .classList.add("flex items-center justify-center text-2xl font-medium");
     }
   };
 
   return (
     <>
       <div className="AllChats h-screen flex">
-        <div
-          className="chatLogs bg-brown-100 w-screen md:w-[35vw] md:block "
-          onClick={() => {
-            console.log(123);
-          }}
-        >
+        <div className="chatLogs bg-brown-100 w-screen md:w-[35vw] md:block ">
           <div className="header flex justify-between items-center h-[10vh]  border-b-2 border-black">
             <div className="profile-photo px-4 flex items-center">
               <Avatar
                 src="https://docs.material-tailwind.com/img/face-2.jpg"
                 alt="avatar"
               />
-              <div className="username text-[1.2em] font-bold pl-2">
-                {username}
-              </div>
-
+              <div className="username text-[1.2em] font-bold pl-2">{username}</div>
             </div>
             <div className="Chat-config-btns flex justify-evenly w-32 ">
               <Button variant="filled" className="w-2 flex justify-center  bg-black">
@@ -73,16 +87,17 @@ function ChatLogs() {
             </div>
           </div>
 
-          <div className="All-Chat-Logs h-[80vh]" onClick={() => {
-            func()
-          }}>
-            <div className="Chat-instance  !important hover:bg-gray-400 active:bg-gray-400 focus-visible:bg-gray-400 border-b-2 border-black flex h-[8vh] items-center cursor-pointer">
-
-              <div className="image pl-3"> <Avatar
-                src="https://docs.material-tailwind.com/img/face-2.jpg"
-                alt="avatar"
-
-              /></div>
+          <div className="All-Chat-Logs h-[80vh]">
+            <div className="Chat-instance  !important hover:bg-gray-400 active:bg-gray-400 focus-visible:bg-gray-400 border-b-2 border-black flex h-[8vh] items-center cursor-pointer" onClick={() => {
+              func()
+            }}>
+              <div className="image pl-3">
+                {" "}
+                <Avatar
+                  src="https://docs.material-tailwind.com/img/face-2.jpg"
+                  alt="avatar"
+                />
+              </div>
               <div className="information pl-5">
                 <div className="username text-lg font-bold">Sheldon</div>
                 <div className="last-message">We'll meet at 5...</div>
@@ -90,15 +105,20 @@ function ChatLogs() {
             </div>
           </div>
           <div className="footer h-[10vh] border-t-2 border-black flex items-center px-4 ">
-            <Button variant="filled" className="flex justify-center bg-black" onClick={() => {
-              axios.get("api/v1/user/logout")
-                .then((response) => {
-                  navigate("/login")
-                }).catch((error) => {
-                  console.error("Error occurred:", error);
-
-                })
-            }}>
+            <Button
+              variant="filled"
+              className="flex justify-center bg-black"
+              onClick={() => {
+                axios
+                  .get("api/v1/user/logout")
+                  .then((response) => {
+                    navigate("/login");
+                  })
+                  .catch((error) => {
+                    console.error("Error occurred:", error);
+                  });
+              }}
+            >
               Logout!
             </Button>
           </div>
@@ -111,7 +131,7 @@ function ChatLogs() {
         >
           Select a chat and have fun
         </div>
-      </div >
+      </div>
     </>
   );
 }

@@ -9,7 +9,7 @@ import RegisterUser from "./components/registerUser.jsx";
 
 async function IsUserLoggedIn() {
   try {
-    const response = await axios.get("api/v1/user/isLoggedIn", { withCredentials: true });
+    const response = await axios.get("/api/v1/user/isLoggedIn", { withCredentials: true });
     if (response.status === 200) {
       // console.log(response.typeof, response.data === "Not logged in")
       if (response.data.message === "Not logged in") {
