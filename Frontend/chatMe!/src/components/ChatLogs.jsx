@@ -6,26 +6,13 @@ import { redirect, useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 const socket = io("http://localhost:3000", {
   protocols: ["websocket"],
+  autoConnect: false,
 });
-
 
 function ChatLogs() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      socket.on("welcome", (data) => {
-        console.log("msg from server:", data);
-      })
-      socket.emit("msg", "thanks for connecting");
-    })
-
-    return () => {
-      socket.off("connect")
-    }
-
-  }, []);
+  const [status, setStatus] = useState("inactive");
 
   useEffect(() => {
     axios
@@ -34,12 +21,27 @@ function ChatLogs() {
         if (response.status === 200) {
           // console.log("Chat logs retrieved:", response.data);
           setUsername(response.data.data.username);
+
         }
       })
       .catch((err) => {
         // console.error("Error occurred:", err)
         navigate("/Register");
       });
+  }, []);
+
+  useEffect(() => {
+    socket.connect();
+    socket.on("connect", () => {
+      setStatus("active");
+      axios
+        .post("/api/v1/user/set-status", {
+          username: username,
+          status: status
+        })
+        .then((res) => console.log(res.data))
+        .catch((err) => console.log(err));
+    });
   }, []);
 
   const func = () => {
@@ -88,9 +90,12 @@ function ChatLogs() {
           </div>
 
           <div className="All-Chat-Logs h-[80vh]">
-            <div className="Chat-instance  !important hover:bg-gray-400 active:bg-gray-400 focus-visible:bg-gray-400 border-b-2 border-black flex h-[8vh] items-center cursor-pointer" onClick={() => {
-              func()
-            }}>
+            <div
+              className="Chat-instance  !important hover:bg-gray-400 active:bg-gray-400 focus-visible:bg-gray-400 border-b-2 border-black flex h-[8vh] items-center cursor-pointer"
+              onClick={() => {
+                func();
+              }}
+            >
               <div className="image pl-3">
                 {" "}
                 <Avatar

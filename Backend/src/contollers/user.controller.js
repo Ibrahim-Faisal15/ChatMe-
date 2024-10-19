@@ -147,4 +147,31 @@ const logoutUser = asyncHandler(async (req, res) => {
 		.json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
-export { registerUser, loginUser, isLoggedIn, getAllChatLogs, logoutUser };
+const setStatus = asyncHandler(async (req, res) => {
+	const { username, status } = req.body;
+
+	if (!(username && status)) {
+		throw new ApiError(400, "Username or status is required");
+	}
+	const user = await UserModel.findOneAndUpdate(
+		{
+			username,
+		},
+		{
+			$set: {
+				status,
+			},
+		},
+		{
+			new: true,
+		}
+	);
+
+	if (!user) {
+		throw new ApiError(404, "User not found");
+	}
+
+	return res.status(200).json(new ApiResponse(200, user.status, "Status updated successfully"));
+});
+
+export { registerUser, loginUser, isLoggedIn, getAllChatLogs, logoutUser, setStatus };
