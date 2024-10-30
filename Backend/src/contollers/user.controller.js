@@ -2,6 +2,7 @@ import ApiError from ".././utils/apiError.utils.js";
 import ApiResponse from ".././utils/apiResponse.utils.js";
 import { UserModel } from "../models/user.model.js";
 import asyncHandler from ".././utils/asyncHandler.utils.js";
+import { Chat_object } from "../models/conversationType.model.js";
 
 const generateAccessToken_and_RefreshToken = async (user_id) => {
 	try {
@@ -174,4 +175,28 @@ const setStatus = asyncHandler(async (req, res) => {
 	return res.status(200).json(new ApiResponse(200, user.status, "Status updated successfully"));
 });
 
-export { registerUser, loginUser, isLoggedIn, getAllChatLogs, logoutUser, setStatus };
+const fetch_messages = asyncHandler(async (req, res) => {
+	const chat_object_exists = await Chat_object.findOne();
+	console.log(chat_object_exists);
+	if (!chat_object_exists) {
+		const chat_object = await Chat_object.create({
+			all_messages: [],
+		});
+		await chat_object.save();
+		console.log("Chat object created successfully");
+	} else {
+		console.log("Chat object already exists");
+	}
+	const chat_object = await Chat_object.find();
+	console.log(chat_object);
+});
+
+export {
+	registerUser,
+	loginUser,
+	isLoggedIn,
+	getAllChatLogs,
+	logoutUser,
+	setStatus,
+	fetch_messages,
+};

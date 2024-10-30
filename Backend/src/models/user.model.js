@@ -26,22 +26,13 @@ const userSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		coverImage: {
-			type: String,
-			default: "Backend\\public\\default_Images", //I will change it back in the future
-		},
 
-		conversations: [
+		messages: [
 			{
 				type: Schema.Types.ObjectId,
-				ref: "ConversationModel",
+				ref: "MessageModel",
 			},
 		],
-
-		profileImage: {
-			type: String,
-			default: "Backend\\public\\default_Images", //I will change it back in the future
-		},
 
 		status: {
 			type: String,

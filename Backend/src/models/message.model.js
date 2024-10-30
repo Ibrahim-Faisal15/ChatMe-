@@ -3,10 +3,6 @@ import { Schema } from "mongoose";
 
 const messageSchema = new Schema(
 	{
-		conversationID: {
-			type: Schema.Types.ObjectId,
-			ref: "ConversationModel",
-		},
 		senderID: {
 			type: Schema.Types.ObjectId,
 			ref: "UserModel",
@@ -19,7 +15,4 @@ const messageSchema = new Schema(
 	{ timestamps: true }
 );
 
-export const MessageModel = mongoose.model(
-	"MessageModel",
-	messageSchema
-);
+export const MessageModel = mongoose.model("MessageModel", messageSchema);
