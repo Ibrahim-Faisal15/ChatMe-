@@ -19,6 +19,7 @@ DatabseConnection()
 
 			socket.on("msg", (data) => {
 				console.log("Data from the client", data);
+				io.emit("message", data);
 			});
 		});
 		server.listen(process.env.PORT || 3000, () => {

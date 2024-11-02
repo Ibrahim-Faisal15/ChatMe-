@@ -17,6 +17,8 @@ function ChatLogs() {
   const [isChatClicked, setIsChatClicked] = useState(false);
   const [clearChatUI, setClearChatUI] = useState("hidden");
   const [clearChatLog, setClearChatLog] = useState("");
+  const [user_message, setUser_message] = useState("");
+  const [Server_message, setServer_message] = useState();
 
   useEffect(() => {
     axios
@@ -44,6 +46,38 @@ function ChatLogs() {
         navigate("/Register");
       });
   }, []);
+
+  useEffect(() => {
+    axios.get("/api/v1/user/fetch-user_messages")
+      .then((response) => {
+        console.log(response.data)
+      })
+      .catch((err) => {
+        console.error("Error occurred:", err)
+      })
+
+  }, [])
+
+  useEffect(() => {
+    socket.on("message", (message) => {
+      console.log("New message received:", message);
+      setServer_message(message);
+      const messageBody = document.querySelector(".chat-body")
+      const messageContainer = document.createElement("div");
+      messageContainer.innerText = message
+      messageBody.appendChild(messageContainer);
+
+
+    });
+
+    return () => {
+      socket.disconnect();
+    }
+  }, [])
+
+
+
+
 
   const fetchChats = () => {
     // if (window.innerWidth < 768) {
@@ -112,7 +146,7 @@ function ChatLogs() {
               </div>
               <div className="information pl-5">
                 <div className="username text-lg font-bold">Sheldon</div>
-                <div className="last-message">We'll meet at 5...</div>
+                <div className="last-user_message">We'll meet at 5...</div>
               </div>
             </div>
           </div>
@@ -162,20 +196,27 @@ function ChatLogs() {
           </div>
             <div className="chat-body h-[80vh]">
 
+
+
             </div>
-            <div className="message-sender h-[10vh] border-t-2 border-black flex items-center px-4">
+            <div className="user_message-sender h-[10vh] border-t-2 border-black flex items-center px-4">
               <div className="relative flex justify-center items-center w-[35rem] md:w-[50rem]">
                 <Input
                   type="text"
-                  label="Type your message"
-                  // value={email}
-                  // onChange={onChange}
+                  label="Type your user_message"
+                  onChange={(e) => {
+                    setUser_message(e.target.value)
+
+                  }}
                   className="pr-20"
                   containerProps={{
                     className: "min-w-0",
                   }}
                 />
                 <Button
+                  onClick={() => {
+                    socket.emit("msg", user_message)
+                  }}
                   size="sm"
                   // color={email ? "gray" : "blue-gray"}
                   // disabled={!email}
@@ -186,24 +227,9 @@ function ChatLogs() {
                 </Button>
 
               </div>
-              <Button
-                size="sm"
-                // color={email ? "gray" : "blue-gray"}
-                // disabled={!email}
-                className="!absolute right-1 top-1 rounded"
-                onClick={() => {
-                  axios.get("/api/v1/user/fetch-messages")
-                    .then((response) => {
-                      console.log(response.data);
-                    })
-                }}
-
-              >
-                click
-              </Button>
             </div></> : "Click a chat and have fun...."}
         </div>
-      </div>
+      </div >
     </>
   );
 }

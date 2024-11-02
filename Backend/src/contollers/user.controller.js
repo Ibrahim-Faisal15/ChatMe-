@@ -176,9 +176,8 @@ const setStatus = asyncHandler(async (req, res) => {
 });
 
 const fetch_messages = asyncHandler(async (req, res) => {
-	const chat_object_exists = await Chat_object.findOne();
-	console.log(chat_object_exists);
-	if (!chat_object_exists) {
+	const chat_object_exists = await Chat_object.find();
+	if (chat_object_exists.length === 0 || !chat_object_exists) {
 		const chat_object = await Chat_object.create({
 			all_messages: [],
 		});
